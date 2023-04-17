@@ -14,7 +14,6 @@ class TestItem(unittest.TestCase):
         self.item8 = Item(8, [], [])
         self.item9 = Item(9, ['one'], ['two'])
 
-
     def test_has_label_true(self):
         self.assertTrue(self.item1.has_label('blue'))
 
