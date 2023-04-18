@@ -5,6 +5,10 @@ class Item:
         self.name = name
         self.labels = labels
         self.dependencies = dependencies
+        self.edge = []
+
+    def add_edge(self, item):
+        self.edge.append(item)
 
     def __repr__(self):
         return str(self.name)
