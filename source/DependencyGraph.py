@@ -80,6 +80,7 @@ class DependencyGraph:
         self.set_node_position(roots, y)       
 
     def draw(self, file_name):
+        print(self.node_positions)
         nx.draw_networkx_nodes(self.graph, self.node_positions, node_color='lightblue', node_size=1000)
         nx.draw_networkx_edges(self.graph, self.node_positions, arrows=True)
         nx.draw_networkx_labels(self.graph, self.node_positions)
