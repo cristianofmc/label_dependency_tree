@@ -31,16 +31,24 @@ class Tree:
     def verify_dependency_soft(self, labels, dependencies):
         return any(set(dependencies).intersection(labels))
 
-    def fetch_item_dependencies_list(self, reference_item: Item):
-        item_dependency_list = []
+    def fetch_item_dependents(self, reference_item: Item):
+        direct_item_dependents = []
+        all_dependencies_from_item = []
         for item in items:
             if reference_item.dependencies and item.labels:
                 if self.has_dependency(item.labels, reference_item.dependencies):
-                    item_dependency_list.append(item)
-        return item_dependency_list
+                    direct_item_dependents.append(item)
+        all_dependencies_from_item = direct_item_dependents
+        next_dependents = []
+        for item in direct_item_dependents:
+            next_dependents = self.fetch_item_dependents(item)
+            for next_item in next_dependents:
+                if next_item not in all_dependencies_from_item:
+                    all_dependencies_from_item.append(next_item)
+        return all_dependencies_from_item
 
     def get_roots(self):
-        return [item for item in self.items if len(self.fetch_item_dependencies_list(item)) == 0]
+        return [item for item in self.items if len(self.fetch_item_dependents(item)) == 0]
         
     def process_items_positions(self):
         self.positions = {}
@@ -80,6 +88,12 @@ items = [item1,item2,item3,item4,item5,item6,item7]
 
 for item in items:
     tree.add_item(item)
+
+for item in tree.items:
+    print('item: ', item.labels[0])
+    for dependent in tree.fetch_item_dependents(item):
+        print(dependent.labels[0])
+    print()
 
 tree.process_edges()
 tree.process_items_positions()
