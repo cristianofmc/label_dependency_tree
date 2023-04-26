@@ -1,26 +1,26 @@
 from typing import List
 from typing import Dict
-from Item import Item
+from source.Item import Item
 
 class Tree:
-    def __init__(self, edge_type: str = 'hard'):
+    def __init__(self, connection_type: str = 'hard'):
         self.items = []
         self.positions = {}
-        self.edge_type = edge_type
+        self.connection_type = connection_type
 
     def add_item(self, item: Item):
         self.items.append(item)
 
-    def process_edges(self, edge_type: str = 'hard'):
+    def process_connections(self):
         for item in self.items:
-            item.edges = []
+            item.connections = []
             for depentency_items in self.items:
                 if depentency_items.dependencies and item.labels:
                     if self.has_dependency(item.labels, depentency_items.dependencies):
-                        item.edges.append(depentency_items)
+                        item.add_connection(depentency_items)
 
     def has_dependency(self, labels, dependencies):
-        if self.edge_type == 'soft':
+        if self.connection_type == 'soft':
             return self.verify_dependency_soft(labels, dependencies)
         else:
             return self.verify_dependency_hard(labels, dependencies)
@@ -34,7 +34,7 @@ class Tree:
     def fetch_item_dependents(self, reference_item: Item):
         direct_item_dependents = []
         all_dependencies_from_item = []
-        for item in items:
+        for item in self.items:
             if reference_item.dependencies and item.labels:
                 if self.has_dependency(item.labels, reference_item.dependencies):
                     direct_item_dependents.append(item)
@@ -54,47 +54,24 @@ class Tree:
         self.positions = {}
         self.process_layers(self.get_roots())
     
-    def process_layers(self, items, start_point = 0):
+    def process_layers(self, items: List, start_point = 0):
         self.define_item_position(items, start_point)
         next_list = self.fetch_next_layer_list(items)
-        if next_list: self.process_layers(next_list, start_point + 1)
+        if next_list: self.process_layers(next_list, start_point - 1)
+    
+    def x_offset_calc(self, len):
+        return int(len / 2) *-1
     
     def define_item_position(self, items:  list, y):
+        x_offset = self.x_offset_calc(len(items))
         for index, item in enumerate(items):
-            self.positions[item] = (index, y)
+            self.positions[item] = (index + x_offset, y)
 
     def fetch_next_layer_list(self, current_list: list):
         next_list = []
         for item in current_list:
-            for edge in item.edges:
-                if edge not in next_list:
-                    next_list.append(edge)
+            for connection in item.connections:
+                if connection not in next_list:
+                    next_list.append(connection)
         return next_list
-
-
-
-
-
-tree = Tree('soft')
-# tree = Tree()
-item1 = Item(1, ['blue'], [])
-item2 = Item(2, ['yellow'], [])
-item3 = Item(3, ['red'], [])
-item4 = Item(4, ['green'], ['blue', 'yellow'])
-item5 = Item(5, ['orange'], ['red', 'yellow'])
-item6 = Item(6, ['violet'], ['blue', 'red'])
-item7 = Item(7, ['russet'], ['orange', 'violet'])
-items = [item1,item2,item3,item4,item5,item6,item7]
-
-for item in items:
-    tree.add_item(item)
-
-for item in tree.items:
-    print('item: ', item.labels[0])
-    for dependent in tree.fetch_item_dependents(item):
-        print(dependent.labels[0])
-    print()
-
-tree.process_edges()
-tree.process_items_positions()
-print(tree.positions)
+ 
