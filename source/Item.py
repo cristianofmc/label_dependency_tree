@@ -5,12 +5,10 @@ class Item:
         self.name = name
         self.labels = labels
         self.dependencies = dependencies
+        self.connections = []
+
+    def add_connection(self, item):
+        self.connections.append(item)
 
     def __repr__(self):
         return str(self.name)
-
-    def has_label(self, label):
-        return label in self.labels
-
-    def has_dependency(self, label):
-        return any(label in dependency for dependency in self.dependencies)

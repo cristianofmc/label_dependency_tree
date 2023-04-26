@@ -14,18 +14,22 @@ class TestItem(unittest.TestCase):
         self.item8 = Item(8, [], [])
         self.item9 = Item(9, ['one'], ['two'])
 
-    def test_has_label_true(self):
-        self.assertTrue(self.item1.has_label('blue'))
+    def test_constructor(self):
+        self.assertEqual(self.item4.name, 4)
+        self.assertEqual(self.item4.labels, ['green'])
+        self.assertEqual(self.item4.dependencies, ['blue', 'yellow'])
+        self.assertEqual(self.item4.connections, [])
 
-    def test_has_label_false(self):
-        self.assertFalse(self.item2.has_label('red'))
+    def test_label_false(self):
+        self.assertFalse(['red'] in self.item2.labels)
 
-    def test_has_dependency_true(self):
-        self.assertTrue(self.item4.has_dependency('blue'))
-        self.assertTrue(self.item4.has_dependency('yellow'))
+    def test_dependency_false(self):
+        self.assertFalse(['blue'] in self.item5.dependencies)
 
-    def test_has_dependency_false(self):
-        self.assertFalse(self.item5.has_dependency('blue'))
+    def test_add_connection(self):
+        self.item1.add_connection(self.item4)
+        self.item1.add_connection(self.item6)
+        self.assertEqual(self.item1.connections, [self.item4, self.item6])
 
     if __name__ == '__main__':
         unittest.main()
