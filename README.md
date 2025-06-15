@@ -2,7 +2,7 @@
 
 This app created with python that provide a base to create a dependency tree, with a optional output draw of the tree.
 
-![Screenshot](https://github.com/cristianofmc/label_dependency_tree/blob/main/color_example.png)
+![Screenshot](https://raw.githubusercontent.com/cristianofmc/label_dependency_tree/refs/heads/main/color_example.png)
 
 ## Instalation
 To run this project you need the python3 and the requirements instaled, please check the [requirements.txt](https://github.com/cristianofmc/label_dependency_tree/blob/main/requirements.txt)
